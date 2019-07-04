@@ -114,11 +114,12 @@ public class EmailComposer extends CordovaPlugin {
      *
      * @param id The app id.
      */
-    private void client(final String id) {
+    private void client(String id) {
+        final String finalId = id;
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 Impl impl   = new Impl(getContext());
-                boolean res = impl.isAppInstalled(id);
+                boolean res = impl.isAppInstalled(finalId);
 
                 sendResult(new PluginResult(Status.OK, res));
             }
@@ -163,14 +164,15 @@ public class EmailComposer extends CordovaPlugin {
      *
      * @param props The email properties like subject or body
      */
-    private void open(final JSONObject props) {
+    private void open(JSONObject props) {
         final EmailComposer me = this;
+        final JSONObject finalProps = props;
 
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
                     Impl impl    = new Impl(getContext());
-                    Intent draft = impl.getDraft(props);
+                    Intent draft = impl.getDraft(finalProps);
 
                     cordova.startActivityForResult(me, draft, 0);
                 } catch (ActivityNotFoundException e) {
